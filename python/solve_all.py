@@ -31,11 +31,11 @@ class Size(enum.Enum):
 def solver(size: Size, instance: Instance) -> Solution:
     # Modify this function to use your imported solvers.
     # YOUR CODE HERE
-    if size == Size.SMALL:
-        return solve_d(instance)
-    elif size == Size.MEDIUM:
-        return solve_d(instance)
-    elif size == Size.LARGE:
+    #if size == Size.SMALL:
+        #return solve_d(instance)
+    #if size == Size.MEDIUM:
+        #return solve_d(instance)
+    if size == Size.LARGE:
         return solve_d(instance)
 
 

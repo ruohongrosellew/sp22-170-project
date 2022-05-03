@@ -35,13 +35,28 @@ def solve_d(instance: Instance) -> Solution:
     # initialize lp problem
     lp = pulp.LpProblem('PPP', pulp.LpMinimize)
 
+
+
     # Create problem Variable
     towers = []
     for i in all_tower_index:
-        towers.append(pulp.LpVariable(name="tower" + str(i), lowBound=0, upBound=1, cat="Integer"))
+        towers.append(pulp.LpVariable(name="tower" + str(i), lowBound=0, upBound=1, cat = "Integer"))
+
+    # Create coverage matrix
+    coverage = []
+    for i in all_tower_index:
+        result = []
+        for a in list_of_close_tower(i, instance.penalty_radius, instance.grid_side_length):
+            result += towers[a]
+        coverage.append(result)
+
+    #print(len(coverage))
+
 
     # Objective Func
-    lp += pulp.lpSum([towers[i] for i in all_tower_index])
+    #lp += pulp.lpSum([towers[i] for i in all_tower_index])
+    to_min = [coverage[i] for i in all_tower_index]
+    lp += pulp.lpSum(to_min)
 
     # Constraints:
     for j in np.array(corr).T:
@@ -56,11 +71,12 @@ def solve_d(instance: Instance) -> Solution:
             tower_index = int(i.name[5:]) 
             chosen_towers.append(num_to_corr(tower_index, instance.grid_side_length))
    
-    print(chosen_towers)
-    return Solution(
+    sol = Solution(
         instance = instance,
         towers = chosen_towers
     )
+    print(sol.penalty())
+    return sol
 
 
 
@@ -74,6 +90,21 @@ def chosen(index):
             chosen_towers.append(num_to_corr(i, dimension))
     return chosen_towers
 """
+
+def list_of_close_tower(num, rp, dimension):
+    result = []
+    point = num_to_corr(num, dimension)
+    for x in list(range(-rp, rp+1, 1)):
+        for y in list(range(-rp, rp+1, 1)):
+            if(x*x + y*y <= rp* rp): 
+                if x + point.x >= 0 and x + point.x < dimension:
+                    if y + point.y >= 0 and y + point.y < dimension:
+                        result.append(corr_to_num(Point(x + point.x, y+ point.y), dimension))
+    return result
+
+
+def corr_to_num(coor: Point, dimension):
+    return dimension * coor.y + coor.x
 
 def num_to_corr(num, dimension):
     y = num // (dimension)

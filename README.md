@@ -1,5 +1,10 @@
 # Spring 2022 CS170 Project Skeleton
 
+## How to run this Algorithm
+
+The algorithm should work by simply running solve_all.py
+While we are running our solution on our personal computer, we had issues running all the small, medium, and large inputs together. This is probably due to the contstraint of the computation power of our laptop, and it also can be the issue with our linear programming solver: PuLP.
+
 ## Requirements
 
 A Python skeleton is available in the `python` subdirectory. The Python
